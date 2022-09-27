@@ -218,10 +218,8 @@ def recursive_menu_creation(project_version,mig_name,parent_object_id):
                                                   Parent_Object_Id=parent_object_id)
     if sub_objects_data:
         sub_objects_list = [obj['Object_Type'] for obj in sub_objects_data.values()]
-
         for sub_object in sub_objects_list:
             inter_dict['Object_Type'] = sub_object
-
             sub_object_id_data = ObjectTypes.objects.filter(Project_Version_Id=project_version, Migration_Name=mig_name,
                                                             Object_Type=sub_object, Parent_Object_Id=parent_object_id)
             sub_object_id = sub_object_id_data.values()[0]['Object_Id']
@@ -229,8 +227,12 @@ def recursive_menu_creation(project_version,mig_name,parent_object_id):
             sub_features_data = Features.objects.filter(Project_Version_Id=project_version, Migration_Name=mig_name,
                                                         Object_Id=sub_object_id)
             feature_names = [obj['Feature_Name'] for obj in sub_features_data.values()]
-
-            inter_dict['Feature_Names'] = feature_names
+            feature_dict = {}
+            feature_names_list = []
+            for feature in feature_names:
+                feature_dict['Feature_Name'] = feature
+                feature_names_list.append(feature_dict.copy())
+            inter_dict['Sub_Menu'] = feature_names_list
 
             sub_inter_dict = recursive_menu_creation(project_version, mig_name, sub_object_id)
 
@@ -239,6 +241,7 @@ def recursive_menu_creation(project_version,mig_name,parent_object_id):
     else:
         inter_list = []
     return inter_list
+
 
 @api_view(['POST'])
 def menu_view_creation(request):
@@ -264,7 +267,12 @@ def menu_view_creation(request):
         features_data = Features.objects.filter(Project_Version_Id = project_version, Migration_Name = mig_name,
                                                 Object_Id = object_id)
         feature_names = [obj['Feature_Name'] for obj in features_data.values()]
-        final_dict['Feature_Names'] = feature_names
+        feature_dict = {}
+        feature_names_list = []
+        for feature in feature_names:
+            feature_dict['Feature_Name'] = feature
+            feature_names_list.append(feature_dict.copy())
+        final_dict['Sub_Menu'] = feature_names_list
 
         inter_list = recursive_menu_creation(project_version, mig_name, object_id)
 
