@@ -1,5 +1,5 @@
 """
-WSGI config for CookBook_Backend project.
+WSGI Config for CookBook_Backend project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 

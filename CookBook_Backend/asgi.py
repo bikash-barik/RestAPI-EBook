@@ -1,5 +1,5 @@
 """
-ASGI config for CookBook_Backend project.
+ASGI Config for CookBook_Backend project.
 
 It exposes the ASGI callable as a module-level variable named ``application``.
 
